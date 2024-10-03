@@ -1,39 +1,52 @@
 # Практическое занятие №1. Введение, основы работы в командной строке
 
-П.Н. Советов, РТУ МИРЭА
+А.Е. Беляев, РТУ МИРЭА
 
 Научиться выполнять простые действия с файлами и каталогами в Linux из командной строки. Сравнить работу в командной строке Windows и Linux.
 
 ## Задача 1
 
 Вывести отсортированный в алфавитном порядке список имен пользователей в файле passwd (вам понадобится grep).
+```
+grep '.*' /etc/passwd | cut -d: -f1 | sort
+```
+![конфа1](https://github.com/user-attachments/assets/b8a7237e-a104-4dea-94f5-899d49701ab8)
+
 
 ## Задача 2
 
 Вывести данные /etc/protocols в отформатированном и отсортированном порядке для 5 наибольших портов, как показано в примере ниже:
+```
+awk '{print $2, $1}' /etc/protocols | sort -nr | head -n 5
+```
+![конфа 2](https://github.com/user-attachments/assets/a1b0cb63-6878-4664-99d5-068115551efe)
 
-```
-[root@localhost etc]# cat /etc/protocols ...
-142 rohc
-141 wesp
-140 shim6
-139 hip
-138 manet
-```
 
 ## Задача 3
 
 Написать программу banner средствами bash для вывода текстов, как в следующем примере (размер баннера должен меняться!):
 
 ```
-[root@localhost ~]# ./banner "Hello from RTU MIREA!"
-+-----------------------+
-| Hello from RTU MIREA! |
-+-----------------------+
+#!/bin/bash
+
+text=$*
+length=${#text}
+
+for i in $(seq 1 $((length + 2))); do
+    line+="-"
+done
+
+echo "+${line}+"
+echo "| ${text} |"
+echo "+${line}+"
 ```
-
-Перед отправкой решения проверьте его в ShellCheck на предупреждения.
-
+Далее переходим обратно в эмулятор и пишем:
+```
+dos2unix 3rd.sh
+sudo chmod 755 3rd.sh
+./ 3rd.sh "hello"
+```
+![конфа 3](https://github.com/user-attachments/assets/ffb90ef5-d848-41aa-b001-8fc179fd1a65)
 ## Задача 4
 
 Написать программу для вывода всех идентификаторов (по правилам C/C++ или Java) в файле (без повторений).
@@ -41,8 +54,16 @@
 Пример для hello.c:
 
 ```
-h hello include int main n printf return stdio void world
+#!/bin/bash
+
+file="$1"
+
+id=$(grep -o -E '\b[a-zA-Z]*\b' "$file" | sort -u)
+_________________________________
+
+grep -oE '\b[a-zA-Z_][a-zA-Z0-9_]*\b' hello.c | grep -vE '\b(int|void|return|if|else|for|while|include|stdio)\b' | sort | uniq
 ```
+![конфа 4](https://github.com/user-attachments/assets/9e26ff97-82cb-4df9-a8be-2e57ae619876)
 
 ## Задача 5
 
